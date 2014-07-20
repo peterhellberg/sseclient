@@ -41,11 +41,6 @@ func OpenURL(url string) (events chan Event, err error) {
 				fmt.Fprintf(os.Stderr, "error during resp.Body read:%s\n", err)
 				close(events)
 			}
-			line = bytes.TrimSpace(line)
-
-			if len(line) == 0 {
-				continue
-			}
 
 			switch {
 			// OK line
