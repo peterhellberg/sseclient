@@ -13,7 +13,7 @@ import (
 type Event struct {
 	Name string
 	ID   string
-	Data map[string]string
+	Data map[string]interface{}
 }
 
 // OpenURL opens a connection to a stream of server sent events
@@ -49,7 +49,7 @@ func OpenURL(url string) (events chan Event, err error) {
 
 			// id of event
 			case bytes.HasPrefix(line, []byte("id:")):
-				ev.ID = string(line[3:])
+				ev.ID = string(line[4:])
 
 			// name of event
 			case bytes.HasPrefix(line, []byte("event:")):
@@ -60,21 +60,20 @@ func OpenURL(url string) (events chan Event, err error) {
 				buf.Write(line[6:])
 
 			// end of event
-			case len(line) == 1:
+			case bytes.Equal(line, []byte("\n")):
 				b := buf.Bytes()
 
 				if bytes.HasPrefix(b, []byte("{")) {
-					var data map[string]string
-
+					var data map[string]interface{}
 					err := json.Unmarshal(b, &data)
 
 					if err == nil {
 						ev.Data = data
 						buf.Reset()
 						events <- ev
+						ev = Event{}
 					}
 				}
-				ev = Event{}
 
 			default:
 				fmt.Fprintf(os.Stderr, "Error: len:%d\n%s", len(line), line)
