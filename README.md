@@ -4,6 +4,8 @@ I needed a simple client for the events sent from my Spark Core via the
 [Spark API](http://docs.spark.io/api/), unfortunately it includes extra
 lines like `:ok` that is not part of any event.
 
+[![GoDoc](https://godoc.org/github.com/peterhellberg/sseclient?status.svg)](https://godoc.org/github.com/peterhellberg/sseclient)
+
 Based on the work by [@cryptix](https://github.com/cryptix/goSSEClient)
 
 ## LICENSE
