@@ -48,16 +48,22 @@ func OpenURL(url string) (events chan Event, err error) {
 				// Do nothing
 
 			// id of event
-			case bytes.HasPrefix(line, []byte("id:")):
+			case bytes.HasPrefix(line, []byte("id: ")):
 				ev.ID = string(line[4:])
+			case bytes.HasPrefix(line, []byte("id:")):
+				ev.ID = string(line[3:])
 
 			// name of event
-			case bytes.HasPrefix(line, []byte("event:")):
+			case bytes.HasPrefix(line, []byte("event: ")):
 				ev.Name = string(line[7 : len(line)-1])
+			case bytes.HasPrefix(line, []byte("event:")):
+				ev.Name = string(line[6 : len(line)-1])
 
 			// event data
-			case bytes.HasPrefix(line, []byte("data:")):
+			case bytes.HasPrefix(line, []byte("data: ")):
 				buf.Write(line[6:])
+			case bytes.HasPrefix(line, []byte("data:")):
+				buf.Write(line[5:])
 
 			// end of event
 			case bytes.Equal(line, []byte("\n")):
@@ -72,7 +78,7 @@ func OpenURL(url string) (events chan Event, err error) {
 						buf.Reset()
 						events <- ev
 						ev = Event{}
-					}
+                    }
 				}
 
 			default:
