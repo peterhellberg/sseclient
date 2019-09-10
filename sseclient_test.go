@@ -1,17 +1,28 @@
 package sseclient
 
-import (
-	"testing"
-
-	"github.com/stretchr/testify/assert"
-)
+import "testing"
 
 func TestEvent(t *testing.T) {
-	e := Event{Name: "foo", ID: "bar", Data: map[string]interface{}{
-		"baz": 123,
-	}}
+	var (
+		name = "foo"
+		id   = "bar"
+		baz  = 123
+		data = map[string]interface{}{
+			"baz": baz,
+		}
+	)
 
-	assert.Equal(t, e.Name, "foo")
-	assert.Equal(t, e.ID, "bar")
-	assert.Equal(t, e.Data["baz"].(int), 123)
+	e := Event{Name: name, ID: id, Data: data}
+
+	if got, want := e.Name, name; got != want {
+		t.Fatalf("e.Name = %q, want %q", got, want)
+	}
+
+	if got, want := e.ID, id; got != want {
+		t.Fatalf("e.ID = %q, want %q", got, want)
+	}
+
+	if got, want := e.Data["baz"].(int), baz; got != want {
+		t.Fatalf(`e.Data["baz"].(int) = %d, want %d`, got, want)
+	}
 }
